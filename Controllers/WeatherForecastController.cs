@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.FeatureManagement;
+using Microsoft.FeatureManagement.Mvc;
 
 namespace WebApiPrototype.Controllers
 {
@@ -23,6 +24,8 @@ namespace WebApiPrototype.Controllers
             _featureManager = featureManager;
         }
 
+        [FeatureGate("MyEnableGetFeatureFlag")]
+        //[FeatureGate("MyPercentageFeatureFlag")] // can also use a percentage-based feature gate
         [HttpGet(Name = "GetWeatherForecast")]
         public async Task<IEnumerable<WeatherForecast>> GetAsync()
         {

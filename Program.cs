@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.FeatureManagement;
+using Microsoft.FeatureManagement.FeatureFilters;
 using WebApiPrototype;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +41,7 @@ builder.Services.AddRateLimiter(limitOptions =>
 
 // Feature Management (by config)
 builder.Services.AddFeatureManagement();
+builder.Services.AddFeatureManagement().AddFeatureFilter<PercentageFilter>();
 
 var app = builder.Build();
 
