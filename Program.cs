@@ -82,4 +82,12 @@ app.UseRateLimiter();
 
 app.UseMiddleware<MyCustomMiddleware>();
 
+// map custom middleware with a request delegate (NOT the preferred way, which is above)
+app.Use(async (context, next) =>
+{
+    System.Diagnostics.Debug.WriteLine($"Request Delegate Middleware - Before request {context.Request.Path}");
+    await next(context);
+    System.Diagnostics.Debug.WriteLine($"Request Delegate Middleware - After request {context.Request.Path}");
+});
+
 app.Run();
