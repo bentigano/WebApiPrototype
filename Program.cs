@@ -1,3 +1,5 @@
+using WebApiPrototype;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -19,5 +21,17 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
+
+// minimal API's
+app.MapGet("/GetUser", () =>
+{
+    return "User retrieved";
+});
+app.MapDelete("/DeleteUser", (int userNumber) =>
+{
+    return $"User with number {userNumber} deleted";
+});
+// Extension method created in MyUserEndpoints.cs
+app.AddMyUserEndpoints();
 
 app.Run();
