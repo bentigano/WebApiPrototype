@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.FeatureManagement;
 
 namespace WebApiPrototype.Controllers
 {
@@ -13,17 +14,24 @@ namespace WebApiPrototype.Controllers
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
+        private readonly IFeatureManager _featureManager;
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IFeatureManager featureManager)
         {
             _logger = logger;
+            _featureManager = featureManager;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<IEnumerable<WeatherForecast>> GetAsync()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            int totalDaysToReturn = 5;
+            if (await _featureManager.IsEnabledAsync("MyFeatureFlag"))
+            {
+                totalDaysToReturn = 10;
+            }
+            return Enumerable.Range(1, totalDaysToReturn).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
                 TemperatureC = Random.Shared.Next(-20, 55),

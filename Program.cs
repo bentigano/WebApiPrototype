@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.FeatureManagement;
 using WebApiPrototype;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +37,9 @@ builder.Services.AddRateLimiter(limitOptions =>
     });
 });
 #endregion
+
+// Feature Management (by config)
+builder.Services.AddFeatureManagement();
 
 var app = builder.Build();
 
