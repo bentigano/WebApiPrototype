@@ -13,6 +13,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Custom Middleware
+builder.Services.AddTransient<MyCustomMiddleware>();
+
 #region Response Compression
 builder.Services.AddResponseCompression(options =>
 {
@@ -76,5 +79,7 @@ app.AddMyUserEndpoints();
 
 // must be called after routing, for example when using [EnableRateLimiting] on controllers and endpoints
 app.UseRateLimiter();
+
+app.UseMiddleware<MyCustomMiddleware>();
 
 app.Run();
