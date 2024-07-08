@@ -43,6 +43,10 @@ builder.Services.AddRateLimiter(limitOptions =>
 builder.Services.AddFeatureManagement();
 builder.Services.AddFeatureManagement().AddFeatureFilter<PercentageFilter>();
 
+// Custom Configuration Options
+builder.Services.Configure<CustomOptions>(
+    builder.Configuration.GetSection("CustomOptions"));
+
 var app = builder.Build();
 
 app.UseResponseCompression();

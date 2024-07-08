@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.FeatureManagement.Mvc;
 
@@ -17,11 +18,13 @@ namespace WebApiPrototype.Controllers
 
         private readonly IFeatureManager _featureManager;
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IOptions<CustomOptions> _options;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IFeatureManager featureManager)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IFeatureManager featureManager, IOptions<CustomOptions> options)
         {
             _logger = logger;
             _featureManager = featureManager;
+            _options = options;
         }
 
         [FeatureGate("MyEnableGetFeatureFlag")]
@@ -29,6 +32,11 @@ namespace WebApiPrototype.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public async Task<IEnumerable<WeatherForecast>> GetAsync()
         {
+            if (_options.Value.ReportErrors)
+            {
+                // so something with _options.Value.ErrorMessage
+            }
+
             int totalDaysToReturn = 5;
             if (await _featureManager.IsEnabledAsync("MyFeatureFlag"))
             {
