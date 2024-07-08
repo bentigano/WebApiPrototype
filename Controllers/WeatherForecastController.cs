@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace WebApiPrototype.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [EnableRateLimiting("FiveRequestsPerTenSeconds")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

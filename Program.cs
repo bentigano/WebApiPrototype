@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.ResponseCompression;
 using WebApiPrototype;
 
@@ -20,6 +21,19 @@ builder.Services.AddResponseCompression(options =>
 builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
 {
     options.Level = System.IO.Compression.CompressionLevel.Optimal;
+});
+#endregion
+
+#region Rate Limiting
+builder.Services.AddRateLimiter(limitOptions =>
+{
+    limitOptions.AddFixedWindowLimiter(policyName: "FiveRequestsPerTenSeconds", fixedWindowOptions =>
+    {
+        fixedWindowOptions.PermitLimit = 5;
+        fixedWindowOptions.Window = TimeSpan.FromSeconds(10);
+        fixedWindowOptions.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst;
+        fixedWindowOptions.QueueLimit = 2;
+    });
 });
 #endregion
 
@@ -49,5 +63,8 @@ app.MapDelete("/DeleteUser", (int userNumber) =>
 });
 // Extension method created in MyUserEndpoints.cs
 app.AddMyUserEndpoints();
+
+// must be called after routing, for example when using [EnableRateLimiting] on controllers and endpoints
+app.UseRateLimiter();
 
 app.Run();
