@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.ResponseCompression;
 using WebApiPrototype;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +10,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+#region Response Compression
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<BrotliCompressionProvider>();
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes;
+});
+builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+{
+    options.Level = System.IO.Compression.CompressionLevel.Optimal;
+});
+#endregion
+
 var app = builder.Build();
+
+app.UseResponseCompression();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
