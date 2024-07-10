@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.FeatureManagement;
 using Microsoft.FeatureManagement.FeatureFilters;
 using WebApiPrototype;
+using WebApiPrototype.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,10 @@ builder.Services.AddFeatureManagement().AddFeatureFilter<PercentageFilter>();
 // Custom Configuration Options
 builder.Services.Configure<CustomOptions>(
     builder.Configuration.GetSection("CustomOptions"));
+
+// Custom services
+builder.Services.AddHostedService<MyBackgroundService>();
+builder.Services.AddHostedService<MyPeriodicBackgroundService>();
 
 var app = builder.Build();
 
