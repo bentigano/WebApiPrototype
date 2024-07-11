@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.FeatureManagement;
 using Microsoft.FeatureManagement.FeatureFilters;
 using WebApiPrototype;
+using WebApiPrototype.HealthChecks;
 using WebApiPrototype.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,6 +58,11 @@ builder.Services.Configure<CustomOptions>(
 builder.Services.AddHostedService<MyBackgroundService>();
 builder.Services.AddHostedService<MyPeriodicBackgroundService>();
 
+// Health Checks
+builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddCheck<MyHealthCheck>("MySampleHealthCheckName");
+
 var app = builder.Build();
 
 app.UseResponseCompression();
@@ -93,6 +101,19 @@ app.Use(async (context, next) =>
     System.Diagnostics.Debug.WriteLine($"Request Delegate Middleware - Before request {context.Request.Path}");
     await next(context);
     System.Diagnostics.Debug.WriteLine($"Request Delegate Middleware - After request {context.Request.Path}");
+});
+
+// map health check URL with default options
+// app.MapHealthChecks("/healthchecks");
+// map health check URL with specific HTTP response codes (below are the defaults)
+app.MapHealthChecks("/healthchecks", new HealthCheckOptions
+{
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Degraded] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status505HttpVersionNotsupported
+    }
 });
 
 app.Run();
