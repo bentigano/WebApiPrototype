@@ -13,7 +13,7 @@ namespace WebApiPrototype.HealthChecks
         public Task<HealthCheckResult> CheckHealthAsync(
         HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            var isHealthy = true;
+            var isHealthy = false;
 
             // perform some processing to check the health of something
 
@@ -22,7 +22,13 @@ namespace WebApiPrototype.HealthChecks
                 return Task.FromResult(HealthCheckResult.Healthy("A healthy result."));
             }
 
-            return Task.FromResult(new HealthCheckResult(context.Registration.FailureStatus, "An unhealthy result."));
+            var data = new Dictionary<string, object>()
+            {
+                { "SomeKey", 17 },
+                { "AnotherKey", "a string value" },
+            };
+
+            return Task.FromResult(new HealthCheckResult(context.Registration.FailureStatus, "An unhealthy result.", null, data));
 
             // if this method throws an exception, a FailureStatus is returned (unhealthy), with the inner exception in the Description
 

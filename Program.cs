@@ -113,7 +113,8 @@ app.MapHealthChecks("/healthchecks", new HealthCheckOptions
         [HealthStatus.Healthy] = StatusCodes.Status200OK,
         [HealthStatus.Degraded] = StatusCodes.Status200OK,
         [HealthStatus.Unhealthy] = StatusCodes.Status505HttpVersionNotsupported
-    }
+    },
+    ResponseWriter = HealthCheckOutputWriter.WriteResponse
 });
 
 app.Run();
