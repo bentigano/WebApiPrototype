@@ -63,6 +63,9 @@ builder.Services.AddHealthChecks();
 builder.Services.AddHealthChecks()
     .AddCheck<MyHealthCheck>("MySampleHealthCheckName");
 
+// Caching
+builder.Services.AddMemoryCache();
+
 var app = builder.Build();
 
 app.UseResponseCompression();
