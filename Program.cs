@@ -98,6 +98,9 @@ app.UseRateLimiter();
 
 app.UseMiddleware<MyCustomMiddleware>();
 
+// IP Whitelist Middleware
+app.UseMiddleware<MyIPWhitelistMiddleware>();
+
 // map custom middleware with a request delegate (NOT the preferred way, which is above)
 app.Use(async (context, next) =>
 {
