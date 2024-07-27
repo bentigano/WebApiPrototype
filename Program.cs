@@ -104,6 +104,9 @@ app.UseMiddleware<MyIPWhitelistMiddleware>();
 // API Key Middleware
 app.UseMiddleware<MyApiKeyMiddleware>();
 
+// Remove Insecure Headers
+app.UseMiddleware<MyHeaderSecurityMiddleware>();
+
 // map custom middleware with a request delegate (NOT the preferred way, which is above)
 app.Use(async (context, next) =>
 {
