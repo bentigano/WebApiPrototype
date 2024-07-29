@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.FeatureManagement;
 using Microsoft.FeatureManagement.FeatureFilters;
+using System.Text;
 using WebApiPrototype;
 using WebApiPrototype.HealthChecks;
 using WebApiPrototype.Services;
@@ -90,6 +92,47 @@ app.MapDelete("/DeleteUser", (int userNumber) =>
 {
     return $"User with number {userNumber} deleted";
 });
+
+#region Minimal API's with Parameters
+{
+    app.MapPut("/SaveUser/{id}", ([FromRoute] int id,
+                         [FromQuery(Name = "name")] string fullName,
+                         [FromHeader(Name = "Content-Type")] string contentType)
+                         =>
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine($"id = {id}");
+        sb.AppendLine($"name = {fullName}");
+        sb.AppendLine($"contentType = {contentType}");
+        return sb.ToString();
+    });
+    // Same request as above but pulling the parameters directly from the request
+    // This approach will not show ANY parameters for this request in Swagger (unlike above)
+    app.MapPut("/DeactivateUser/{id}", (HttpRequest request) =>
+    {
+        var id = request.RouteValues["id"];
+        var fullName = request.Query["name"];
+        var contentType = request.Headers["Content-Type"];
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine($"id = {id}");
+        sb.AppendLine($"name = {fullName}");
+        sb.AppendLine($"contentType = {contentType}");
+        return sb.ToString();
+    });
+    // Properties from the body will be mapped to properties of WeatherForecast.
+    // Any JSON values that aren't properties of WeatherForecast will be ignored.
+    // See Swagger for example
+    app.MapPatch("/CreateForecast/{id}", (WeatherForecast forecast) =>
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine($"summary = {forecast.Summary}");
+        sb.AppendLine($"date = {forecast.Date}");
+        sb.AppendLine($"TempC = {forecast.TemperatureC}");
+        return sb.ToString();
+    });
+}
+#endregion
+
 // Extension method created in MyUserEndpoints.cs
 app.AddMyUserEndpoints();
 
