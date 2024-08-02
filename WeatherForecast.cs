@@ -1,5 +1,9 @@
+using System.Diagnostics;
+
 namespace WebApiPrototype
 {
+
+    [DebuggerDisplay("WeatherForecast {Date}: {TemperatureC}*C {TemperatureF}*F ({Summary})")]    
     public class WeatherForecast
     {
         public DateOnly Date { get; set; }
