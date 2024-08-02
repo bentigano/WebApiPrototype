@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace WebApiPrototype
+namespace WebApiPrototype.Middleware
 {
     /// <summary>
     /// Check to see if the IP address of the client is allowed based on a whitelist.

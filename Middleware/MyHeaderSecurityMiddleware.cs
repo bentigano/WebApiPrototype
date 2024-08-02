@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Primitives;
 
-namespace WebApiPrototype
+namespace WebApiPrototype.Middleware
 {
     /// <summary>
     /// Middleware that will remove headers that provide system info,

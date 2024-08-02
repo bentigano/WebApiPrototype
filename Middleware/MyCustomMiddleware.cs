@@ -1,4 +1,4 @@
-﻿namespace WebApiPrototype
+﻿namespace WebApiPrototype.Middleware
 {
     public class MyCustomMiddleware : IMiddleware
     {

@@ -1,4 +1,4 @@
-﻿namespace WebApiPrototype
+﻿namespace WebApiPrototype.Middleware
 {
     /// <summary>
     /// Check to see if an X-Api-Key header was supplied and the valied is allowed based on a whitelist.
@@ -22,7 +22,7 @@
             // (could also retrieve from a database or other source)
             var _validApiKeys = _configuration.GetSection("AllowedApiKeys").Get<string[]>();
             if (_validApiKeys == null) { _validApiKeys = new string[0]; }
-            
+
 
             if (!context.Request.Headers.TryGetValue(API_KEY_HEADER_NAME, out var receivedApiKey) || !_validApiKeys.Contains(receivedApiKey.ToString()))
             {

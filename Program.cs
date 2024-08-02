@@ -8,6 +8,7 @@ using Microsoft.FeatureManagement.FeatureFilters;
 using System.Text;
 using WebApiPrototype;
 using WebApiPrototype.HealthChecks;
+using WebApiPrototype.Middleware;
 using WebApiPrototype.Services;
 
 var builder = WebApplication.CreateBuilder(args);
