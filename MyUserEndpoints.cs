@@ -21,6 +21,6 @@
 
     public class Thing
     {
-        public int ID;
+        public int ID { get; set; }
     }
 }
