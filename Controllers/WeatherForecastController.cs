@@ -31,6 +31,8 @@ namespace WebApiPrototype.Controllers
             _options = options;
         }
 
+        [EndpointDescription("Returns an array of weather forecasts.")]
+        [Produces("application/json")]
         [FeatureGate("MyEnableGetFeatureFlag")]
         //[FeatureGate("MyPercentageFeatureFlag")] // can also use a percentage-based feature gate
         [HttpGet(Name = "GetWeatherForecast")]
