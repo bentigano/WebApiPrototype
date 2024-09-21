@@ -25,8 +25,8 @@ namespace WebApiPrototype.Middleware
                 context.Response.Headers.Remove("X-Powered-By");
                 context.Response.Headers.Remove("X-AspNet-Version");
                 context.Response.Headers.Remove("X-AspNetMvc-Version");
-                context.Response.Headers.Add("X-Content-Type-Options", new StringValues("nosniff"));
-                context.Response.Headers.Add("X-Frame-Options", new StringValues("DENY"));
+                context.Response.Headers.Append("X-Content-Type-Options", new StringValues("nosniff"));
+                context.Response.Headers.Append("X-Frame-Options", new StringValues("DENY"));
                 return Task.CompletedTask;
             });
 
