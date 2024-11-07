@@ -1,4 +1,6 @@
-﻿namespace WebApiPrototype.Middleware
+﻿using System.Net;
+
+namespace WebApiPrototype.Middleware
 {
     /// <summary>
     /// Check to see if an X-Api-Key header was supplied and the valied is allowed based on a whitelist.
@@ -23,12 +25,20 @@
             var _validApiKeys = _configuration.GetSection("AllowedApiKeys").Get<string[]>();
             if (_validApiKeys == null) { _validApiKeys = new string[0]; }
 
-
-            if (!context.Request.Headers.TryGetValue(API_KEY_HEADER_NAME, out var receivedApiKey) || !_validApiKeys.Contains(receivedApiKey.ToString()))
+            bool skipValidation = false;
+            if (context.Connection.LocalIpAddress != null && IPAddress.IsLoopback(context.Connection.LocalIpAddress))
             {
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsync($"Invalid or missing API Key.");
-                return;
+                skipValidation = true;
+            }
+
+            if (!skipValidation)
+            {
+                if (!context.Request.Headers.TryGetValue(API_KEY_HEADER_NAME, out var receivedApiKey) || !_validApiKeys.Contains(receivedApiKey.ToString()))
+                {
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    await context.Response.WriteAsync($"Invalid or missing API Key.");
+                    return;
+                }
             }
 
             await _next(context);
